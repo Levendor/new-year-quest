@@ -1,10 +1,67 @@
 class Quest {
   constructor() {
-    this.tasks = tasks;
+    const save = localStorage.getItem('new-year-2022-quest');
+    this.tasks = save ? JSON.parse(save) : [
+      {
+        ordinal: 0,
+        text: 'Я первое задание',
+        answer: '1',
+        secret: '1',
+        solved: false,
+        startTime: new Date('December 31, 2022 12:00:00'),
+        endTime: new Date('December 31, 2022 14:00:00'),
+      },
+      {
+        ordinal: 1,
+        text: 'Я - второе задание',
+        answer: '2',
+        secret: '0',
+        solved: false,
+        startTime: new Date('December 31, 2022 14:00:00'),
+        endTime: new Date('December 31, 2022 16:00:00'),
+      },
+      {
+        ordinal: 2,
+        text: 'Я - третье задание',
+        answer: '3',
+        secret: '0',
+        solved: false,
+        startTime: new Date('December 31, 2022 16:00:00'),
+        endTime: new Date('December 31, 2022 18:00:00'),
+      },
+      {
+        ordinal: 3,
+        text: 'Я - четвёртое задание',
+        answer: '4',
+        secret: '9',
+        solved: false,
+        startTime: new Date('December 31, 2022 18:00:00'),
+        endTime: new Date('December 31, 2022 20:00:00'),
+      },
+      {
+        ordinal: 4,
+        text: 'Я - пятое задание',
+        answer: '5',
+        secret: '1',
+        solved: false,
+        startTime: new Date('December 31, 2022 20:00:00'),
+        endTime: new Date('December 31, 2022 22:00:00'),
+      },
+      {
+        ordinal: 5,
+        text: 'Я - последнее задание',
+        answer: '6',
+        secret: '1',
+        solved: false,
+        startTime: new Date('December 31, 2022 22:00:00'),
+        endTime: new Date('December 31, 2022 23:50:00'),
+      },
+    ];
   }
 
   clock = () => {
-    const currentTime = Date.now();
+    // const currentTime = Date.now();
+    const currentTime = new Date(new Date('December 31, 2022 13:00:00').valueOf() + (new Date(Date.now()) - new Date('December 29, 2022 00:00:00')).valueOf());
     const task = this.getCurrentTask(currentTime);
     const status = this.getStatus(currentTime, task);
     // const task = this.tasks[0];
@@ -12,15 +69,25 @@ class Quest {
     const time = this.getTime(status, currentTime, task);
     const description = this.getDescription(status, task);
     this.render(status, time, description);
+    button.onclick = () => {
+      if (input.value === task.answer) {
+        input.value = 'правильно!';
+        task.solved = true;
+        localStorage.setItem('new-year-2022-quest', JSON.stringify(this.tasks));
+      } else {
+        input.value = 'неправильно';
+      }
+      setTimeout(() => input.value = '', 1000);
+    }
     setTimeout(this.clock, 1000);
   }
 
   getCurrentTask = (currentTime) => {
-    return this.tasks.find((task) => task.startTime <= currentTime && task.endTime > currentTime);
+    return this.tasks.find((task) => new Date(task.startTime) <= currentTime && new Date(task.endTime) > currentTime);
   }
 
   getStatus = (currentTime, task) => {
-    if (currentTime < this.tasks[0].startTime) return 'before';
+    if (currentTime < new Date(this.tasks[0].startTime)) return 'before';
     else if (!task) return 'after';
     else if (task.ordinal === 5 && task.solved) return 'victory';
     else if (task.solved) return 'solved';
@@ -31,19 +98,19 @@ class Quest {
     let time;
     switch (status) {
       case 'before':
-        time = new Date(this.tasks[0].startTime - currentTime);
+        time = new Date(new Date(this.tasks[0].startTime) - currentTime);
         break;
       case 'solved':
       case 'in progress':
-        time = new Date(task.endTime - currentTime);
+        time = new Date(new Date(task.endTime) - currentTime);
         break;
       case 'victory':
       case 'after':
       default:
     }
     if (!time) return '';
-    const days = time.getDate();
-    const hour = time.getHours() + (days * 24);
+    const days = time.getDate() - 1;
+    const hour = time.getHours() - 1 + (days * 24);
     const min = time.getMinutes();
     const sec = time.getSeconds();
     return `${hour}:${decimalize(min)}:${decimalize(sec)}`;
@@ -89,67 +156,4 @@ function decimalize(n) {
   return n < 10 ? '0' + n : n;
 };
 
-const msDay = 86400000;
-
-const tasks = [
-  {
-    ordinal: 0,
-    text: 'Я женщинам не доверяю<br>Они коварны и хитры<br>Они на ногти клеют ногти<br>Рисуют брови на бровях',
-    answer: '',
-    secret: '1',
-    solved: false,
-    startTime: new Date('December 31, 2022 12:00:00'),
-    endTime: new Date('December 31, 2022 14:00:00'),
-  },
-  {
-    ordinal: 1,
-    text: 'Я - второе задание',
-    answer: '',
-    secret: '0',
-    solved: false,
-    startTime: new Date('December 31, 2022 14:00:00'),
-    endTime: new Date('December 31, 2022 16:00:00'),
-  },
-  {
-    ordinal: 2,
-    text: 'Я - третье задание',
-    answer: '',
-    secret: '0',
-    solved: false,
-    startTime: new Date('December 31, 2022 16:00:00'),
-    endTime: new Date('December 31, 2022 18:00:00'),
-  },
-  {
-    ordinal: 3,
-    text: 'Я - четвёртое задание',
-    answer: '',
-    secret: '9',
-    solved: false,
-    startTime: new Date('December 31, 2022 18:00:00'),
-    endTime: new Date('December 31, 2022 20:00:00'),
-  },
-  {
-    ordinal: 4,
-    text: 'Я - пятое задание',
-    answer: '',
-    secret: '1',
-    solved: false,
-    startTime: new Date('December 31, 2022 20:00:00'),
-    endTime: new Date('December 31, 2022 22:00:00'),
-  },
-  {
-    ordinal: 5,
-    text: 'Я - последнее задание',
-    answer: '',
-    secret: '1',
-    solved: false,
-    startTime: new Date('December 31, 2022 22:00:00'),
-    endTime: new Date('December 31, 2022 23:50:00'),
-  },
-];
-
 new Quest().clock();
-
-// TODO
-// действие при нажатии кнопки
-// сохранение в локал сторадж
