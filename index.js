@@ -4,64 +4,70 @@ class Quest {
     this.tasks = save ? JSON.parse(save) : [
       {
         ordinal: 0,
-        text: 'Я первое задание',
-        answer: '1',
+        text: 'я - твоё первое заданье<br>над моей лёгкостью не ржи<br>все цифры в наших днях рожденья<br>сложи',
+        hint: '2904199119021990',
+        answer: ['66'],
         secret: '1',
         solved: false,
-        startTime: new Date('December 31, 2022 12:00:00'),
-        endTime: new Date('December 31, 2022 14:00:00'),
+        startTime: '2022-12-31T11:00:00.000Z',
+        endTime: '2022-12-31T13:00:00.000Z',
       },
       {
         ordinal: 1,
-        text: 'Я - второе задание',
-        answer: '2',
+        text: 'я в твоём царстве в месте тайном<br>успешно разместил пароль<br>найти его пока не поздно<br>изволь',
+        hint: 'иди на запах металлических кастрюль',
+        answer: ['пароль'],
         secret: '0',
         solved: false,
-        startTime: new Date('December 31, 2022 14:00:00'),
-        endTime: new Date('December 31, 2022 16:00:00'),
+        startTime: '2022-12-31T13:00:00.000Z',
+        endTime: '2022-12-31T15:00:00.000Z',
       },
       {
         ordinal: 2,
-        text: 'Я - третье задание',
-        answer: '3',
+        text: 'внизу загадочное слово<br>динь-динь звенит, гудит трубой<br>и унесёт тебя дорогой<br>какой<br><br>"нвтыяйчос"',
+        hint: 'св*****ый',
+        answer: ['святочный'],
         secret: '0',
         solved: false,
-        startTime: new Date('December 31, 2022 16:00:00'),
-        endTime: new Date('December 31, 2022 18:00:00'),
+        startTime: '2022-12-31T15:00:00.000Z',
+        endTime: '2022-12-31T17:00:00.000Z',
       },
       {
         ordinal: 3,
-        text: 'Я - четвёртое задание',
-        answer: '4',
+        text: 'настало время приключений<br>сходить, послушать, помечтать<br>когда красиво снег нападал<br>узнать',
+        hint: 'машина споёт тебе',
+        answer: ['рождество', 'на рождество'],
         secret: '9',
         solved: false,
-        startTime: new Date('December 31, 2022 18:00:00'),
-        endTime: new Date('December 31, 2022 20:00:00'),
+        startTime: '2022-12-31T17:00:00.000Z',
+        endTime: '2022-12-31T19:00:00.000Z',
       },
       {
         ordinal: 4,
         text: 'Я - пятое задание',
+        hint: 'Я - подсказка',
         answer: '5',
         secret: '1',
         solved: false,
-        startTime: new Date('December 31, 2022 20:00:00'),
-        endTime: new Date('December 31, 2022 22:00:00'),
+        startTime: '2022-12-31T19:00:00.000Z',
+        endTime: '2022-12-31T21:00:00.000Z',
       },
       {
         ordinal: 5,
         text: 'Я - последнее задание',
+        hint: 'Я - подсказка',
         answer: '6',
         secret: '1',
         solved: false,
-        startTime: new Date('December 31, 2022 22:00:00'),
-        endTime: new Date('December 31, 2022 23:50:00'),
+        startTime: '2022-12-31T21:00:00.000Z',
+        endTime: '2022-12-31T22:50:00.000Z',
       },
     ];
   }
 
   clock = () => {
-    // const currentTime = Date.now();
-    const currentTime = new Date(new Date('December 31, 2022 13:00:00').valueOf() + (new Date(Date.now()) - new Date('December 29, 2022 00:00:00')).valueOf());
+    const currentTime = Date.now();
+    // const currentTime = new Date(new Date('December 31, 2022 18:00:00').valueOf() + (new Date(Date.now()) - new Date('December 29, 2022 00:00:00')).valueOf());
     const task = this.getCurrentTask(currentTime);
     const status = this.getStatus(currentTime, task);
     // const task = this.tasks[0];
@@ -70,7 +76,7 @@ class Quest {
     const description = this.getDescription(status, task);
     this.render(status, time, description);
     button.onclick = () => {
-      if (input.value === task.answer) {
+      if (task.answer.includes(input.value.toLowerCase())) {
         input.value = 'правильно!';
         task.solved = true;
         localStorage.setItem('new-year-2022-quest', JSON.stringify(this.tasks));
@@ -91,6 +97,7 @@ class Quest {
     else if (!task) return 'after';
     else if (task.ordinal === 5 && task.solved) return 'victory';
     else if (task.solved) return 'solved';
+    else if (new Date(task.endTime) - currentTime < 900_000) return 'in progress close to end';
     else return 'in progress';
   }
 
@@ -102,6 +109,7 @@ class Quest {
         break;
       case 'solved':
       case 'in progress':
+      case 'in progress close to end':
         time = new Date(new Date(task.endTime) - currentTime);
         break;
       case 'victory':
@@ -120,13 +128,16 @@ class Quest {
     let description = '';
     switch (status) {
       case 'before':
-        description = 'Задания начнутся через';
+        description = '<h4>Задания начнутся через</h4>';
         break;
       case 'solved':
-        description = `<p class="secret">${task.secret}</p>` + '<br>' + 'Следующее задание начнётся через'
+        description = `<p class="secret">${task.secret}</p>` + '<br>' + '<h4>Следующее задание начнётся через</h4>';
         break;
       case 'in progress':
-        description = 'Задание:' + '<br><br>' + task.text + '<br><br>' + 'Время задания истечёт через'
+        description = '<h4>Задание:</h4>' + '<br>' + task.text + '<br><br>' + '<h4>Время задания истечёт через</h4>';
+        break;
+      case 'in progress close to end':
+        description = '<h4>Задание:</h4>' + '<br>' + task.text + '<br><br>' + '<h4>Подсказка:</h4>' + '<br>' + task.hint + '<br><br>' + '<h4>Время задания истечёт через</h4>';
         break;
       case 'victory':
         description = '<p class="secret">Победа!</p>' + '<br><br>';
@@ -142,12 +153,12 @@ class Quest {
   render = (status, time, description) => {
     text.innerHTML = description;
     timer.value = time;
-    if (status !== 'in progress') {
-      input.classList.add('hidden');
-      button.classList.add('hidden');
-    } else {
+    if (status === 'in progress' || status === 'in progress close to end') {
       input.classList.remove('hidden');
       button.classList.remove('hidden');
+    } else {
+      input.classList.add('hidden');
+      button.classList.add('hidden');
     }
   }
 }
