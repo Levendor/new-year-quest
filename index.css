@@ -6,7 +6,6 @@ html {
   font-size: 10px;
 }
 .main {
-  height: 95vh;
   padding: 1rem;
 }
 .window {
@@ -15,7 +14,6 @@ html {
   align-items: center;
   height: 100%;
   box-sizing: border-box;
-  border: 1px solid black;
   padding-top: 25vh;
   row-gap: 1rem;
 }

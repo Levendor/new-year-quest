@@ -4,7 +4,7 @@ class Quest {
     this.tasks = save ? JSON.parse(save) : [
       {
         ordinal: 0,
-        text: 'я - твоё первое заданье<br>над моей лёгкостью не ржи<br>все цифры в наших днях рожденья<br>сложи',
+        text: 'я - твоё первое заданье<br>над моей сложностью не ржи<br>все цифры в наших днях рожденья<br>сложи',
         hint: '2904199119021990',
         answer: ['66'],
         secret: '1',
@@ -24,7 +24,7 @@ class Quest {
       },
       {
         ordinal: 2,
-        text: 'внизу загадочное слово<br>динь-динь звенит, гудит трубой<br>и унесёт тебя дорогой<br>какой<br><br>"нвтыяйчос"',
+        text: 'внизу загадочное слово<br>динь-динь звенит гудит трубой<br>и унесёт тебя дорогой<br>какой<br><br>"нвтыяйчос"',
         hint: 'св*****ый',
         answer: ['святочный'],
         secret: '0',
@@ -34,7 +34,7 @@ class Quest {
       },
       {
         ordinal: 3,
-        text: 'настало время приключений<br>сходить, послушать, помечтать<br>когда красиво снег нападал<br>узнать',
+        text: 'настало время приключений<br>сходить послушать помечтать<br>когда красиво снег нападал<br>узнать',
         hint: 'машина споёт тебе',
         answer: ['рождество', 'на рождество'],
         secret: '9',
@@ -44,9 +44,23 @@ class Quest {
       },
       {
         ordinal: 4,
-        text: 'Я - пятое задание',
-        hint: 'Я - подсказка',
-        answer: '5',
+        text: 'а помнишь ты тот день и месяц<br>среди поешь и не реви<br>когда последний раз признались<br>в любви',
+        hint: 'проверь в истории сообщений',
+        answer: [
+          '15 декабря',
+          '15 декабря 2022',
+          '15 декабря 2022 года',
+          '15.12',
+          '15 12',
+          '1512',
+          '15.12.2022',
+          '15 12 2022',
+          '15122022',
+          '15 декабря 2022г.',
+          '15 декабря 2022 г.',
+          '15 декабря 2022г',
+          '15 декабря 2022 г',
+        ],
         secret: '1',
         solved: false,
         startTime: '2022-12-31T19:00:00.000Z',
@@ -54,9 +68,9 @@ class Quest {
       },
       {
         ordinal: 5,
-        text: 'Я - последнее задание',
-        hint: 'Я - подсказка',
-        answer: '6',
+        text: 'там может зло быть или чудо<br>быть может кот живой иль нет<br>открой его чтобы найти свой<br>ответ',
+        hint: 'проверь почтовый ящик',
+        answer: ['кровать'],
         secret: '1',
         solved: false,
         startTime: '2022-12-31T21:00:00.000Z',
@@ -67,7 +81,10 @@ class Quest {
 
   clock = () => {
     const currentTime = Date.now();
-    // const currentTime = new Date(new Date('December 31, 2022 18:00:00').valueOf() + (new Date(Date.now()) - new Date('December 29, 2022 00:00:00')).valueOf());
+    // const currentTime = new Date(
+    //   new Date('December 31, 2022 12:00:00').valueOf()
+    //   + (new Date(Date.now()) - new Date('December 29, 2022 23:00:00')).valueOf()
+    // );
     const task = this.getCurrentTask(currentTime);
     const status = this.getStatus(currentTime, task);
     // const task = this.tasks[0];
@@ -137,7 +154,8 @@ class Quest {
         description = '<h4>Задание:</h4>' + '<br>' + task.text + '<br><br>' + '<h4>Время задания истечёт через</h4>';
         break;
       case 'in progress close to end':
-        description = '<h4>Задание:</h4>' + '<br>' + task.text + '<br><br>' + '<h4>Подсказка:</h4>' + '<br>' + task.hint + '<br><br>' + '<h4>Время задания истечёт через</h4>';
+        description = '<h4>Задание:</h4>' + '<br>' + task.text + '<br><br>' + '<h4>Подсказка:</h4>'
+          + '<br>' + task.hint + '<br><br>' + '<h4>Время задания истечёт через</h4>';
         break;
       case 'victory':
         description = '<p class="secret">Победа!</p>' + '<br><br>';
